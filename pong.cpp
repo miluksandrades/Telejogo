@@ -182,7 +182,7 @@ void moveJogador(int &move_jogadorY, int &movimento_jogador){
 	
 	switch(movimento_jogador){
 		case 1:
-			move_jogadorY +=5;
+			move_jogadorY +=30;
 			if(move_jogadorY+240 >= 399){ 
 				movimento_jogador = 2;
 			}
@@ -190,7 +190,7 @@ void moveJogador(int &move_jogadorY, int &movimento_jogador){
 		case 2:
 			break;
 		case 3:
-			move_jogadorY -=5;
+			move_jogadorY -=30;
 			if(move_jogadorY+190 <= 5) {
 				movimento_jogador = 2;
 			}
