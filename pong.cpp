@@ -3,16 +3,16 @@
 #include <string>
 #include <math.h>
 
-#define WIDTH 600 //LARGURA DA JANELA
-#define HEIGHT 500 //ALTURA DA JANELA
-#define VELOCIDADE_BOLA 30 //VELOCIDADE DE DESLOCAMENTO DA BOLA
-#define	VELOCIDADE_JOGADORES 20 //VELOCIDADE DE MOVIMENTO DOS JOGADORES
-#define NUM_RODADAS 10 //numero de rodadas de cada partida
+#define WIDTH 600
+#define HEIGHT 500
+#define VELOCIDADE_BOLA 30
+#define	VELOCIDADE_JOGADORES 1
+#define NUM_RODADAS 10
 
 GLint movebolax=0;
 GLint movebolay=0;
 GLint direcao=1;
-GLint direcao_vertical=1; //1 cima, -1 baixo
+GLint direcao_vertical=1;
 GLint move_jogador1Y=0;
 GLint move_jogador2Y=0;
 
@@ -22,11 +22,11 @@ int TYJ2 = 0;
 int janelaPlacar;
 int janela;
 static char label[200];
-int pts_jogador1 = 0;//pontos do jogador1
-int pts_jogador2 = 0;//pontos do jogador2
+int pts_jogador1 = 0;
+int pts_jogador2 = 0;
 
-int movimento_jogador1 = 2; // 1 = cima; 2 = parado; 3 = baixo
-int movimento_jogador2 = 2; // 1 = cima; 2 = parado; 3 = baixo
+int movimento_jogador1 = 2;
+int movimento_jogador2 = 2;
 
 double angulo = 0.0;
 
@@ -35,8 +35,8 @@ bool pause = true;
 void init(void);
 void display(void);
 void bola(int passo);
-void keyboard(unsigned char key, int x, int y); //capta as acoes no teclado
-void KeySpecial(int key, int x, int y); // capta as acoes do teclado - teclas especiais
+void keyboard(unsigned char key, int x, int y);
+void KeySpecial(int key, int x, int y);
 void DesenhaTexto(char *s);
 void JanelaPlacar(void);
 void moveJogador(int &move_jogadorY, int &movimento_jogador);
@@ -54,7 +54,7 @@ int main(int argc, char** argv){
 	glutInitWindowSize (WIDTH, HEIGHT);
 	glutInitWindowPosition (100, 100); 
 
-	janela = glutCreateWindow ("TELEJOGO");
+	janela = glutCreateWindow ("PONG GAME");
 	glutIdleFunc(displayAll);
 	init();
 	glutDisplayFunc(display);
@@ -67,7 +67,7 @@ int main(int argc, char** argv){
 	
 	glutKeyboardFunc(keyboard);
 	glutSpecialFunc(KeySpecial);
-	/* Sub Janela - Janela Placar */
+	
 	janelaPlacar = glutCreateSubWindow (janela, 5, 5, WIDTH - 10, 85);
 	glutDisplayFunc (JanelaPlacar);
 	
@@ -122,7 +122,6 @@ void display(void){
 		glVertex2i(movebolax+200,movebolay+210);
 	glEnd();
 
-	//  glFlush();
 	glutSwapBuffers();
  }
 
@@ -154,16 +153,16 @@ void keyboard(unsigned char key, int x, int y){
 			direcao=1;
 		
 			break;
-		case 27: //ESC-27 ENTER-13
+		case 27:
 			exit(0);
 			break;
 		case 'w':
 		case 'W':
-			movimento_jogador1 = 1; //Muda a direcao para cima
+			movimento_jogador1 = 1; 
 			break;
 		case 's':
 		case 'S':
-			movimento_jogador1 = 3; //muda a direcao para baixo
+			movimento_jogador1 = 3; 
 			break;
 	}
 }
@@ -182,25 +181,27 @@ void KeySpecial(int key, int x, int y){
 void moveJogador(int &move_jogadorY, int &movimento_jogador){
 	
 	switch(movimento_jogador){
-		case 1: //cima
+		case 1:
 			move_jogadorY +=5;
 			if(move_jogadorY+240 >= 399){ 
 				movimento_jogador = 2;
 			}
 			break;
-		case 2: //parado
+		case 2:
 			break;
-		case 3:	// baixo
+		case 3:
 			move_jogadorY -=5;
 			if(move_jogadorY+190 <= 5) {
 				movimento_jogador = 2;
 			}
 			break;
 	}
-
-	if(move_jogadorY+240 >= 399) //verifica se vai sair do limite do campo para cima
+	
+	movimento_jogador = 2;
+	
+	if(move_jogadorY+240 >= 399)
 		move_jogadorY=156;
-	else if(move_jogadorY+190 <= 5) //verifica se vai sair do limite do campo para baixo
+	else if(move_jogadorY+190 <= 5)
 		move_jogadorY=-184;
 	
 }
@@ -214,12 +215,11 @@ void bola(int passo)
 			movebolax += 5;
 			if(movebolax==290) {
 			
-				//verifica se jogador1 fez ponto
 				if(movebolay+210 < move_jogador2Y+190 || movebolay+200 > move_jogador2Y+240){
 					pts_jogador1++;
 				}else{
 					direcao = 0;
-					angulo = random(); //houve colisao com jogador muda o angulo
+					angulo = random();
 				}
 				
 
@@ -231,7 +231,6 @@ void bola(int passo)
 			
 			movebolay += sin(angulo) * direcao_vertical * 5;
 
-			//colisao nas paredes
 			if(movebolay+210 >= 388 || movebolay+200 <=5){
 				direcao_vertical *= -1;
 			}
@@ -249,7 +248,7 @@ void bola(int passo)
 						pts_jogador2++;
 					}else{
 						direcao = 1;
-						angulo = random(); //houve colisao com jogador muda o angulo
+						angulo = random();
 					}
 			
 				}else{
@@ -284,12 +283,11 @@ void DesenhaPtsPlacar(char *s){
 }
 
 void JanelaPlacar(void){
-	/* Limpa Sub Janela*/
+	
 	glutSetWindow(janelaPlacar);
 	glClearColor(0.25, 0.25, 0.25, 0.0);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	/* MARGENS DA JANELA */
 	glColor3f(0.0F, 1.0F, 0.0F);
 	glBegin (GL_LINE_LOOP);
 		glVertex2f (-0.999F,  0.99F);
@@ -298,14 +296,11 @@ void JanelaPlacar(void){
 		glVertex2f (0.999F,  0.99F);
 	glEnd();
 
-
-	/* Texto Estatico */
 	glColor3f (1.0F, 1.0F, 1.0F);
-	sprintf (label, "Lucas Andrade");
+	sprintf (label, "Computacao Grafica");
 	glRasterPos2f (-0.98F, 0.55F);
 	DesenhaTexto (label);
-
-	//COMANDOS DO JOGO
+	
 	sprintf (label, "Tecle ESC - Sair");
 	glRasterPos2f (-0.98F, 0.0F);
 	DesenhaTexto (label);
@@ -313,14 +308,11 @@ void JanelaPlacar(void){
 	glRasterPos2f (-0.98F, -0.55F);
 	DesenhaTexto (label);
 
-
-	//PLACAR
 	sprintf (label, "PLACAR");
 	glRasterPos2f (0.6F, 0.55F);
 	DesenhaTexto (label);
 
-	//PONTOS JOGADOR1
-	glColor3f(1.0, 0.0, 0.0);
+	glColor3f(1.0, 1.0, 1.0);
 	sprintf (label,  "%i",pts_jogador1);
 	glRasterPos2f (0.5F, -0.2F);
 	DesenhaPtsPlacar (label);
@@ -334,11 +326,10 @@ void JanelaPlacar(void){
 	
 	glColor3f(1.0, 1.0, 1.0);
 	sprintf (label,  "Jogador 1");
-	glRasterPos2f (0.40F, -0.75F);
+	glRasterPos2f (0.43F, -0.75F);
 	DesenhaTexto (label);
 
-	//PONTOS JOGADOR2
-	glColor3f(0.0, 1.0, 0.0);
+	glColor3f(1.0, 1.0, 1.0);
 	sprintf (label, "%i",pts_jogador2);
 	glRasterPos2f (0.8F, -0.2F);
 	DesenhaPtsPlacar (label);
@@ -352,10 +343,9 @@ void JanelaPlacar(void){
 	
 	glColor3f(1.0, 1.0, 1.0);
 	sprintf (label,  "Jogador 2");
-	glRasterPos2f (0.70F, -0.75F);
+	glRasterPos2f (0.73F, -0.75F);
 	DesenhaTexto (label);
 
-	//glFlush();
 	glutSwapBuffers ();
 }
 
@@ -365,11 +355,11 @@ int random(){
 
 void setPause(){
 	
-	movebolax = movebolay = 0; // volta a bola para posicao inicial
-	movimento_jogador1 = movimento_jogador2 = 2; //deixa inerte
-	move_jogador1Y = move_jogador2Y = 0; // volta os jogadores para a posicao inicial
-	pause = true;//flag pra saber se esta pausado
-	direcao_vertical = 1; //aponta a direcao vertical para cima
-	direcao = 2; //deixa a bolinha sem direcao, faz com que ela fica parada
-	angulo = 0; //seta o angulo para quando a bolinha sair, ir reto pois ainda nao houve colisao
+	movebolax = movebolay = 0;
+	movimento_jogador1 = movimento_jogador2 = 2;
+	move_jogador1Y = move_jogador2Y = 0;
+	pause = true;
+	direcao_vertical = 1;
+	direcao = 2;
+	angulo = 0;
 }
